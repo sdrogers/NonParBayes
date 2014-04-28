@@ -1,0 +1,32 @@
+%% Bayesian intro
+\begin{frame}
+	\frametitle{Bayesian Inference}
+	Standard setup:
+	\begin{itemize}
+		\item We have some data $\bX = \{\bx_1,\ldots,\bx_N\}$
+		\item We have a model $p(\bX|\bPars)$
+		\item We define a prior $p(\bPars)$
+		\visible<2->{
+			\item We use Bayes rule (and typically lots of computation) to compute (or estimate) the posterior:
+			\[
+				p(\bPars|\bX) = \frac{p(\bX|\bPars)p(\bPars)}{p(\bX)}
+			\]
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Why be Bayesian?}
+	\begin{itemize}
+		\visible<2->{
+			\item Within \ac{ML} we are often interested in making predictions (predicing $y_*$ from $\bx_*$).
+			\item Being Bayesian allows us to \emph{average} over uncertainity in parameters when making predictions:
+			\[
+				p(y_*|\bx_*,\bX) = \int p(y_*|\bx_*,\bPars)p(\bPars|\bX)~d\bPars
+			\]
+		}
+		\visible<3->{
+			\item Bayes rule tells us how this uncertainty should change as data appear.
+		}
+	\end{itemize}
+\end{frame}

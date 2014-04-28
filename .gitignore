@@ -1,0 +1,16 @@
+*.m~
+*.eps
+*.clo
+*.bst
+*.out
+*.fls
+*.aux
+*.log
+*.bbl
+*.nav
+*.snm
+*.toc
+*.vrb
+*.fdb_latexmk
+octave_workspace
+*.sublime-workspace

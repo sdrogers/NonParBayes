@@ -1,0 +1,142 @@
+\providecommand\forslides{1}
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifnum\forslides=1
+
+  \documentclass{beamer}
+  \usepackage{etex}
+  \reserveinserts{108}
+  \usepackage{animate}
+  \renewcommand{\cite}[1]{[Ref in notes]}
+
+\else
+
+  \documentclass[11pt,a4paper,twoside]{report}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \usepackage{beamerarticle}
+  \usepackage{graphicx}
+  \setlength{\parindent}{0in}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \renewcommand{\lecture}[2]{\chapter{#1}}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \newcommand\NormalArticleFrameTitleMode{%
+    \renewcommand{\frametitle}[1]{%
+      \marginpar{\raggedright ##1 (\insertframenumber)}%
+    }%
+  }
+  \newcommand\ExercisesArticleFrameTitleMode{
+    \renewcommand{\frametitle}[1]{%
+      ##1%
+    }%
+  }
+  \NormalArticleFrameTitleMode
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \renewcommand{\familydefault}{\sfdefault}
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\fi
+
+\usepackage{subfigure,amsmath}
+\usepackage{float}
+\usepackage{subfigure}
+\usepackage{verbatim}
+% %\usepackage[xindy]{glossaries}
+% \usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{xcolor,colortbl}
+\usepackage{acronym}
+
+\acrodef{ML}{Machine Learning}
+\acrodef{HCI}{Human-Computer Interaction}
+\acrodef{GP}{Gaussian Process}
+\acrodef{MVG}{Multi-Variate Gaussian}
+\newcounter{taskcounter}
+
+\definecolor{highlightcol}{rgb}{1,0.184,0.275}
+\newcommand{\focus}[1]{{\textcolor{highlightcol}{\bf #1}}}
+\newcommand{\up}[1]{{\textcolor{red}{\bf #1}}}
+\newcommand{\down}[1]{{\textcolor{OliveGreen}{\bf #1}}}
+\definecolor{yellowhighlighter}{rgb}{1,0.984,0.8}
+\definecolor{nicered}{rgb}{1,0,0}
+\definecolor{niceorange}{rgb}{1,0.6,0}
+\newcommand{\highlightred}[1]{{\textcolor{nicered}{\bf #1}}}
+\newcommand{\highlightorange}[1]{{\textcolor{niceorange}{\bf #1}}}
+\newcommand{\todo}[1]{{\textcolor{green}{\bf TODO: #1}}}
+
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bPars}{\boldsymbol\Theta}
+\newcommand{\by}{\mathbf{y}}
+
+\graphicspath{{../Code/GP/}}
+
+\newsavebox{\selvestebox}
+\newenvironment{task}
+  {\stepcounter{taskcounter}
+  \newcommand\colboxcolor{F87A17}%
+   \begin{lrbox}{\selvestebox}%
+   \begin{minipage}[t]{0.15\textwidth}%\dimexpr\columnwidth-2\fboxsep\relax}
+   \textbf{TASK [\arabic{taskcounter}]}%
+   \end{minipage}%
+   \begin{minipage}[t]{0.8\textwidth}%
+   }
+%   \begin{minipage}[t]{.45\textwidth}
+%  Basic Problems of Single-Photon Polymerization:
+%  \begin{itemize}
+%  \item layer-by-layer type of manufacturing (limits possible geometries)
+%  \item suppression through undesired quenching of radicals
+%  \item diffraction limits
+%  \end{itemize}
+% \end{minipage}
+  {\end{minipage}\end{lrbox}%
+   \begin{center}
+   \fcolorbox[HTML]{\colboxcolor}{FFCC99}{\usebox{\selvestebox}}
+   \end{center}}
+
+\newcommand{\LectureTitlePage}{%
+    % \setcounter{framenumber}{0}
+    \global\def\inserttitle{{Lecture \insertlecturenumber: \insertlecture}}
+    \global\def\insertshorttitle{{Lecture \insertlecturenumber: \insertlecture}}
+    % \global\def\insertdate{\lecturedate}
+    % \global\def\insertshortdate{\lecturedate}
+  \titlepage
+}
+
+\AtBeginLecture{
+    \begin{frame}[plain]
+      \LectureTitlePage
+    \end{frame}
+}
+\setbeamertemplate{caption}[numbered]
+
+\title{Non-parametric Bayesian Methods in Machine Learning}
+\author{Dr. Simon Rogers\\School of Computing Science\\University of Glasgow\\simon.rogers@glasgow.ac.uk\\@sdrogers}
+
+% \includeonlylecture{Intro,CMLintro,prob_stats_R,viz,Clustering,Clustering2}
+
+
+\begin{document}
+
+\mode<all>
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\mode<all>
+
+\input{outline}
+
+\mode<all>
+
+\input{myBayes}
+
+\mode<all>
+
+\input{GPIntro}
+
+\end{document}

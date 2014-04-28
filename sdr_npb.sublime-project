@@ -1,0 +1,49 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "Code",
+			"file_exclude_patterns":[
+			   "*.fdb_latexmk",
+			   "*.log",
+			   "*.aux",
+			   "*.cls",
+			   "*.clo",
+			   "*.bst",
+			   "*.out",
+			   "*.sty",
+			   "*.fls",
+			   "*.blg",
+			   "*.bbl",	
+			   "*.pdf",
+			   "*.nav",
+			   "*.snm",
+			   "*.toc",
+			   "*.vrb"
+			   ]
+		},
+		{
+			"follow_symlinks": true,
+			"path": "SlidesNotes",
+			"file_exclude_patterns":[
+			   "*.fdb_latexmk",
+			   "*.log",
+			   "*.aux",
+			   "*.cls",
+			   "*.clo",
+			   "*.bst",
+			   "*.out",
+			   "*.sty",
+			   "*.fls",
+			   "*.blg",
+			   "*.bbl",	
+			   "*.pdf",
+			   "*.nav",
+			   "*.snm",
+			   "*.toc",
+			   "*.vrb"
+			   ]
+		}
+	]
+}
