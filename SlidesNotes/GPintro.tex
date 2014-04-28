@@ -80,7 +80,7 @@
 	\begin{itemize}
 		\item The GP assumes that the vector of \emph{all possible} $y_n$ is a draw from a \ac{MVG}.
 		\item We don't observe \emph{all possible} values (if we did, we wouldn't need to make predictions!)
-		\visible<2->{\item But the marginal densities of a \ac{MVG} are also \ac{MVG}s so the subset we observe are assumed to come from a \ac{MVG}.
+		\visible<2->{\item But the marginal densities of a \ac{MVG} are also \ac{MVG}s so the subset we observe are also a draw from a \ac{MVG}.
 		\[
 			\by \sim {\cal N}(\boldsymbol\mu,\mathbf{C})
 		\]}
@@ -89,3 +89,57 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}
+	\frametitle{GP definition}
+	\begin{figure}[tbh]
+		\includegraphics[width=\linewidth]{GPcartoon.pdf}		
+		\centering\caption{\label{fig:GPcartoon}Schematic of GP prior for two function values.}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Covariance functions}
+	\begin{itemize}
+		\item By choosing a covariance function, we are making an assumption on the \emph{smoothness} of the regression function.
+		\item Common choices:
+		\begin{itemize}
+			\item Linear: $C(\bx_1,\bx_2) = \bx_1^T\bx_2$
+			\item RBF: $C(\bx_1,\bx_2) = \exp\left\{-0.5\gamma ||\bx_1 - \bx_2||^2 \right\}$
+			\item And many, many more.
+		\end{itemize}
+		\item More details: \url{http://www.gaussianprocess.org/gpml/}
+		\begin{itemize}
+			\item (Free) book
+			\item Code
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Hyper-parameters}
+	\[
+C(\bx_1,\bx_2) = \exp\left\{-0.5\gamma ||\bx_1 - \bx_2||^2 \right\}
+	\]
+	\begin{figure}[tbh]
+		\subfigure[$\gamma=1$]{\includegraphics[width=0.32\linewidth]{gpintro_prior_hyp1.pdf}}
+		\subfigure[$\gamma=10$]{\includegraphics[width=0.32\linewidth]{gpintro_prior_hyp10.pdf}}
+		\subfigure[$\gamma=100$]{\includegraphics[width=0.32\linewidth]{gpintro_prior_hyp100.pdf}}
+		\centering\caption{\label{fig:hyper}Varying hyper-parameters in an RBF covariance varies the smoothness of the function.}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Optimising hyper-parameters}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Making predictions}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{GP classification}
+	
+\end{frame}

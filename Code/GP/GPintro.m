@@ -57,9 +57,10 @@ makePDF('gpintro_poly.eps');
 
 %% A visual example
 close all
-K = kernel(x,x,'gauss',20);
-testK = kernel(x,test_x,'gauss',20);
-testKK = kernel(test_x,test_x,'gauss',20) + 1e-6*eye(length(test_x));
+kpar = [20 1];
+K = kernel(x,x,'gauss',kpar);
+testK = kernel(x,test_x,'gauss',kpar);
+testKK = kernel(test_x,test_x,'gauss',kpar) + 1e-6*eye(length(test_x));
 % Sample functions from the prior
 priorFunctions = gausssamp(repmat(0,length(test_x),1),testKK,20);
 plot(test_x,priorFunctions','b','linewidth',2)
@@ -86,5 +87,34 @@ ylim(yl);
 setupPlot;
 xlabel('x');
 ylabel('y');
-plot(test_x,te,'b','linewidth',stMu2);
+plot(test_x,testMu,'r','linewidth',2);
 makePDF('gpintro_posterior.pdf');
+
+% Predictive patch plot
+close all
+figure
+predVar = sqrt(diag(testCov));
+patch([test_x' test_x(end:-1:1)'],[testMu'+predVar', testMu(end:-1:1)'-predVar(end:-1:1)'],[0.6 0.6 0.6]);
+hold on
+plot(test_x,testMu,'r','linewidth',2);
+plot(x,y,'ko','markersize',20,'linewidth',2);
+setupPlot;
+xlabel('x');
+ylabel('y');
+makePDF('gpintro_predictions.pdf');
+
+%% Hyperparameter plot
+close all;
+hypvals = [1 10 100];
+for i = 1:length(hypvals)
+    close all;
+    figure
+    testKK = kernel(test_x,test_x,'gauss',hypvals(i)) + 1e-6*eye(length(test_x));
+    priorFunctions = gausssamp(repmat(0,size(test_x)),testKK,20);
+    plot(test_x,priorFunctions,'b','linewidth',2);
+    setupPlot;
+    xlabel('x');
+    ylabel('y');
+    filename = sprintf('gpintro_prior_hyp%g.eps',hypvals(i));
+    makePDF(filename);
+end
