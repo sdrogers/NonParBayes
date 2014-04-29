@@ -1,9 +1,15 @@
 %% Setup the GP problem
 
+
 path(path,'../');
 
 clear all;
 close all;
+
+plotfunction = @makePDF;
+% plotfunction = @fakePDF; % This one doesn't make output
+
+
 
 x = rand(10,1);
 noise_ss = 0.05;
@@ -26,7 +32,7 @@ ylabel('y');
 yl = ylim;
 
 
-makePDF('gpintro_data.eps');
+feval(plotfunction,'gpintro_data.eps');
 
 %% Make some polynomial fits
 close all
@@ -52,7 +58,7 @@ setupPlot
 xlabel('x');
 ylabel('y');
 ylim(yl);
-makePDF('gpintro_poly.eps');
+feval(plotfunction,'gpintro_poly.eps');
 
 
 %% A visual example
@@ -70,7 +76,7 @@ setupPlot
 xlabel('x');
 ylabel('y');
 ylim(yl);
-makePDF('gpintro_prior.eps');
+feval(plotfunction,'gpintro_prior.eps');
 
 close all
 
@@ -88,7 +94,7 @@ setupPlot;
 xlabel('x');
 ylabel('y');
 plot(test_x,testMu,'r','linewidth',2);
-makePDF('gpintro_posterior.pdf');
+feval(plotfunction,'gpintro_posterior.pdf');
 
 % Predictive patch plot
 close all
@@ -101,8 +107,21 @@ plot(x,y,'ko','markersize',20,'linewidth',2);
 setupPlot;
 xlabel('x');
 ylabel('y');
-makePDF('gpintro_predictions.pdf');
+feval(plotfunction,'gpintro_predictions.pdf');
 
+%% Compute the posterior using Bayes Rule
+% Don't actuall use this one...
+postCov = inv((1/noise_ss)*eye(length(x)) + K);
+postMu = (1/noise_ss)*postCov*y;
+close all
+postSamples = gausssamp(postMu,postCov,20);
+plot(x,postSamples','bo');
+hold on
+plot(x,y,'ko','markersize',20,'linewidth',2);
+xlabel('x');
+ylabel('y');
+setupPlot;
+feval(plotfunction,'gpposterior_bayes.pdf');
 %% Hyperparameter plot
 close all;
 hypvals = [1 10 100];
@@ -116,5 +135,45 @@ for i = 1:length(hypvals)
     xlabel('x');
     ylabel('y');
     filename = sprintf('gpintro_prior_hyp%g.eps',hypvals(i));
-    makePDF(filename);
+    feval(plotfunction,filename);
 end
+
+%% Noise-free example
+close all
+K = kernel(x,x,'gauss',10);
+testKK = kernel(test_x,test_x,'gauss',10);
+testK = kernel(x,test_x,'gauss',10);
+
+figure
+plot(x,y,'ko','markersize',20,'linewidth',2);
+testMu = testK'*inv(K + 1e-6*eye(length(x)))*y;
+hold on
+plot(test_x,testMu,'ro');
+for i = 1:length(test_x)
+    plot([test_x(i) test_x(i)],[testMu(i) - sqrt(testVar(i)),testMu(i)+sqrt(testVar(i))],'k','color',[0.3 0.3 0.3]);
+end
+
+xlabel('x');
+ylabel('y');
+setupPlot;
+feval(plotfunction,'gpintro_noisefree.eps');
+
+%% Noisey example
+close all
+K = kernel(x,x,'gauss',10);
+testKK = kernel(test_x,test_x,'gauss',10);
+testK = kernel(x,test_x,'gauss',10);
+
+figure
+plot(x,y,'ko','markersize',20,'linewidth',2);
+testMu = testK'*inv(K + noise_ss*eye(length(x)))*y;
+testVar = diag(testKK) - diag(testK'*inv(K + noise_ss*eye(length(x)))*testK);
+hold on
+plot(test_x,testMu,'ro');
+for i = 1:length(test_x)
+    plot([test_x(i) test_x(i)],[testMu(i) - sqrt(testVar(i)),testMu(i)+sqrt(testVar(i))],'k','color',[0.6 0.6 0.6]);
+end
+xlabel('x');
+ylabel('y');
+setupPlot;
+feval(plotfunction,'gpintro_withnoise.eps');

@@ -14,3 +14,4 @@
 *.fdb_latexmk
 octave_workspace
 *.sublime-workspace
+.DS_Store

@@ -1,5 +1,7 @@
 % GP intro
 
+\lecture{Gaussian Process Basics}
+
 \begin{frame}
 	\frametitle{Gaussian Processes}
 	\begin{figure}[tbh]
@@ -83,7 +85,8 @@
 		\visible<2->{\item But the marginal densities of a \ac{MVG} are also \ac{MVG}s so the subset we observe are also a draw from a \ac{MVG}.
 		\[
 			\by \sim {\cal N}(\boldsymbol\mu,\mathbf{C})
-		\]}
+		\]
+		\item i.e. if we have $N$ training points, we're dealing with an $N$-dimensional \ac{MVG}}
 		\visible<3->{\item With mean $\boldsymbol\mu$ (normally 0) and covariance $\mathbf{C}$} 
 		\visible<4->{\item $\bx_n$ looks to have disappeared -- we find it inside $\mathbf{C}$}
 	\end{itemize}
@@ -136,10 +139,97 @@ C(\bx_1,\bx_2) = \exp\left\{-0.5\gamma ||\bx_1 - \bx_2||^2 \right\}
 
 \begin{frame}
 	\frametitle{Making predictions}
-	
+	\begin{itemize}
+		\item If we assume no observation noise, we can place \ac{GP} prior directly on $\by$
+		\item If we observe $\by$ and want to predict $y_*$ for a new observation $\bx_*$:
+		\begin{itemize}
+			\item Construct joint Density (it's a Gaussian):
+			\[
+				\left[
+					\begin{array}{c}
+						\by \\ y_*
+					\end{array}
+				\right]
+				\sim 
+				{\cal N} 	\left (
+								\mathbf{0} , 
+								\left [
+									\begin{array}{cc}
+											C(\bX,\bX) & C(\bX,\bx_*) \\ 
+											C(\bx_*,\bX) & C(\bx_*,\bx_*)
+									\end{array}
+								\right ]
+							\right )
+			\]
+			\item And then use standard results for Gaussian conditionals:
+			\[
+				p(y_*|\by,\bX,\bx_*) = {\cal N}(\mu_*,\sigma^2_*)
+			\]
+			where
+			\begin{eqnarray}
+				\nonumber \mu_* &=& C(\bx_*,\bX)C(\bX,\bX)^{-1}\by\\
+				\nonumber \sigma^2_* &=& C(\bx_*,\bx_*) - C(\bx_*,\bX)C(\bX,\bX)^{-1}K(\bX,\bx^*)
+			\end{eqnarray}
+		\end{itemize}
+	\end{itemize}
+	{\small \url{http://orion.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}}
 \end{frame}
 
 \begin{frame}
-	\frametitle{GP classification}
-	
+	\frametitle{Noise-free example}
+	\begin{figure}[tbh]
+		\centering\includegraphics[width=0.7\linewidth]{gpintro_noisefree.pdf}
+		\centering\caption{\label{fig:gpintro_noisefree}$\mu_*\pm \sigma_*$ for a noise-free GP at lots of test points}
+	\end{figure}
 \end{frame}
+
+\begin{frame}
+	\frametitle{Predictions with noise}
+	\begin{itemize}
+		\item Assuming Gaussian observation noise, we introduce a set of latent variables, $f_n$ and place the GP prior on these.
+		\[
+			y_n \sim {\cal N}(f_n,\sigma^2),~~ \blf \sim {\cal N}(\mathbf{0},\mathbf{C})
+		\]
+		\visible<2->{
+			\item Because both terms are Gaussian, the noise can be pushed into the covariance function:
+			\[
+				\left[
+					\begin{array}{c}
+						\by \\ f_*
+					\end{array}
+				\right]
+				\sim 
+				{\cal N} 	\left (
+								\mathbf{0} , 
+								\left [
+									\begin{array}{cc}
+											C(\bX,\bX) + \sigma^2\mathbf{I} & C(\bX,\bx_*) \\ 
+											C(\bx_*,\bX) & C(\bx_*,\bx_*)
+									\end{array}
+								\right ]
+							\right )
+			\]
+		}
+		\visible<3->{
+			\item And, as before (except now predicting $f_*$):
+			\[
+				p(f_*|\by,\bX,\bx_*,\sigma^2) = {\cal N}(\mu_*,\sigma^2_*)
+			\]
+			where
+			\begin{eqnarray}
+				\nonumber \mu_* &=& C(\bx_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}\by\\
+				\nonumber \sigma^2_* &=& C(\bx_*,\bx_*) - C(\bx_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}K(\bX,\bx^*)
+			\end{eqnarray}
+		}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Example with noise}
+	\begin{figure}[tbh]
+		\centering\includegraphics[width=0.7\linewidth]{gpintro_withnoise.pdf}
+		\centering\caption{\label{fig:gpintro_withnoise}$\mu_*\pm\sigma_*$ at lots of test points when observation noise is included.}
+	\end{figure}
+\end{frame}
+
