@@ -147,6 +147,8 @@ testK = kernel(x,test_x,'gauss',10);
 figure
 plot(x,y,'ko','markersize',20,'linewidth',2);
 testMu = testK'*inv(K + 1e-6*eye(length(x)))*y;
+testVar = diag(testKK) - diag(testK'*inv(K + noise_ss*eye(length(x)))*testK);
+ylim(yl);
 hold on
 plot(test_x,testMu,'ro');
 for i = 1:length(test_x)
@@ -177,3 +179,19 @@ xlabel('x');
 ylabel('y');
 setupPlot;
 feval(plotfunction,'gpintro_withnoise.eps');
+
+%% Classification example
+% Generate some data
+close all;
+x = [randn(20,2)+repmat([2 0],20,1);
+    randn(20,2) + repmat([-2 0],20,1);
+    randn(30,2) + repmat([0 2],30,1)];
+
+t = [repmat(0,40,1);repmat(1,30,1)];
+plotClassData(x,t);
+setupPlot;
+xlim([-5 5]);
+ylim([-3 5]);
+feval(plotfunction,'class_data.eps');
+
+% Do some sampling
