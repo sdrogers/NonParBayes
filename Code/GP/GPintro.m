@@ -182,16 +182,80 @@ feval(plotfunction,'gpintro_withnoise.eps');
 
 %% Classification example
 % Generate some data
+gamvals = [1 5];
 close all;
 x = [randn(20,2)+repmat([2 0],20,1);
     randn(20,2) + repmat([-2 0],20,1);
     randn(30,2) + repmat([0 2],30,1)];
 
-t = [repmat(0,40,1);repmat(1,30,1)];
-plotClassData(x,t);
-setupPlot;
-xlim([-5 5]);
-ylim([-3 5]);
-feval(plotfunction,'class_data.eps');
+y = [repmat(1,40,1);repmat(-1,30,1)];
 
-% Do some sampling
+
+[X,Y] = meshgrid(xl(1):0.2:xl(2),yl(1):0.2:yl(2));
+testx = [reshape(X,prod(size(X)),1) reshape(Y,prod(size(Y)),1)];
+
+for g = 1:length(gamvals)
+    gam = gamvals(g);
+    testC = kernel(testx,x,'gauss',gam);
+
+    % Do some sampling
+    C = kernel(x,x,'gauss',gam);
+    Ci = inv(C);
+    N = size(x,1);
+    f = gausssamp(repmat(0,N,1),C,1)';
+    z = zeros(size(f));
+    NITS = 500;
+    BURN = 100;
+    postC = inv(Ci + eye(N));
+    allf = zeros(NITS,N);
+    testprobs = zeros(size(testx,1),1);
+    testvar = zeros(size(testx,1),1);
+    Cprod = diag(testC*(C\testC'));
+    testvar = repmat(1,size(testx,1),1) - Cprod;
+    for it = 1:NITS
+        fprintf('Iteration %g\n',it);
+        for n = 1:N
+            % sample z_n
+            z(n) = randn + f(n);
+            while z(n)*y(n)<0
+                z(n) = randn + f(n);
+            end
+        end
+        % Sample f
+        f = gausssamp(postC*z,postC,1)';
+
+        % Do the regression for predictions
+        testmu = (testC/C)*f;
+
+        testsample = randn(size(testx,1),1).*sqrt(testvar) + testmu;
+        if it>BURN
+            testprobs = testprobs + normcdf(testsample);
+        end
+        allf(it,:) = f';
+    end
+
+    testprobs = testprobs ./ (NITS-BURN);
+    testprobs = reshape(testprobs,size(X));
+    %% Make the plot
+    close all
+    plotClassData(x,t);
+    setupPlot;
+    xl = [-5 5];
+    yl = [-3 5];
+    xlim(xl);
+    ylim(yl);
+    feval(plotfunction,'class_data.eps');
+    [c,h] = contour(X,Y,testprobs,'k','color',[0.3 0.3 0.3]);
+    clabel(c,h,'color','b','fontsize',14)   
+    fname = sprintf('gpclass_hyp%g.eps',gam);
+    feval(plotfunction,fname);
+    
+    close all
+    surf(X,Y,testprobs);
+    view([0 0 1]);
+    hold on
+    plotClassData3(x,t);
+    setupPlot;
+    fname = sprintf('gpclass_hyp%g_surf.eps',gam);
+    feval(@makePDFopengl,fname);
+end

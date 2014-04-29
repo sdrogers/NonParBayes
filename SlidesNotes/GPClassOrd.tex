@@ -93,10 +93,48 @@
 	\begin{itemize}
 		\item To make predictions:
 		\begin{itemize}
-			\item At each sampling step, do a (noise-free) GP regression using the current sample of $\bf$ to get a density over $f_*$.
+			\item At each sampling step, do a (noise-free) GP regression using the current sample of $\blf$ to get a density over $f_*$ (Details in a previous slide).
 			\item Sample a specific realisation of $f_*$ from this density.
 			\item Compute $\phi(f_*)$ (or sample a $z_*$ and then record whether it's $>0$ or not)
 			\item Average this value over all Gibbs sampling iterations! 
 		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example - binary classification}
+	\begin{figure}[tbh]
+		\centering\includegraphics[width=0.7\linewidth]{class_data.pdf}
+		\centering\caption{\label{fig:class_data}Some simple classification data}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example - binary classification}
+	\begin{figure}[tbh]
+		\centering\includegraphics<1>[width=0.75\linewidth]{gpclass_hyp1_surf.pdf}
+		\centering\includegraphics<2>[width=0.75\linewidth]{gpclass_hyp5_surf.pdf}
+		\centering\includegraphics<3>[width=0.75\linewidth]{gpclass_hyp10_surf.pdf}
+		\centering\caption{\label{fig:binary_results}Predictive probabilities averaged over 1000 Gibbs samples using an RBF covariance. As $\gamma$ is increased, the model overfits.}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Other things}
+	\begin{itemize}
+		\item Inference:
+			\begin{itemize}
+				\item Gibbs sampling isn't the only option
+				\item A popular alternative is Variational Bayes
+			\end{itemize}
+		\item<2-> Ordinal Regression:
+			\begin{itemize}
+				\item Inference for ordinal regression follows the same process.
+				\item The only difference lies in $P(y_n|z_n)$:
+			\[
+				P(y_n=k|z_n) = \delta(b_k<z_n<b_{k+1})
+			\]
+				\item Gibbs distribution for $z_n$ therefore involves a Gaussian truncated at both ends.
+			\end{itemize}
 	\end{itemize}
 \end{frame}

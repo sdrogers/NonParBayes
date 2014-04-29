@@ -1,6 +1,5 @@
 function plotClassData(x,t)
 u = unique(t);
-figure
 hold on
 cols = {[1 1 1],[0.6 0.6 0.6]};
 for i = 1:length(u)
