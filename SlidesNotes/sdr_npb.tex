@@ -78,8 +78,11 @@
 \newcommand{\by}{\mathbf{y}}
 \newcommand{\blf}{\mathbf{f}}
 \newcommand{\bz}{\mathbf{z}}
+\newcommand{\bZ}{\mathbf{Z}}
+\newcommand{\bpi}{\boldsymbol\pi}   
 
-\graphicspath{{../Code/GP/}{Figures/}}
+
+\graphicspath{{../Code/GP/}{Figures/}{../Code/DP/}}
 
 \newsavebox{\selvestebox}
 \newenvironment{task}
@@ -123,7 +126,7 @@
 \title{Non-parametric Bayesian Methods in Machine Learning}
 \author{Dr. Simon Rogers\\School of Computing Science\\University of Glasgow\\simon.rogers@glasgow.ac.uk\\@sdrogers}
 
-% \includeonlylecture{Clinical}
+\includeonlylecture{Dirichlet}
 
 
 \begin{document}
@@ -154,4 +157,7 @@
 
 \mode<all>
 \input{ClinicalRatings}
+
+\mode<all>
+\input{dirichlet}
 \end{document}

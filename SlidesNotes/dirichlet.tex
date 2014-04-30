@@ -1,0 +1,114 @@
+% Dirichlet Processes
+\lecture{Dirichlet Process Priors for Mixture Models}{Dirichlet}
+
+
+\begin{frame}
+	\frametitle{Mixture Models}
+	\begin{itemize}
+		\item A common strategy when faced with complex multi-modal data is to fit a \emph{mixture model}.
+		\item In general:
+		\[
+			p(\bx) = \sum_{k=1}^K P(k)p(\bx|k)
+		\]
+		\item Where each component $p(\bx|k)$ is some simple density, e.g. Gaussian
+		\item Within this model, we must know $K$ \emph{a-priori}
+		\item Can do inference with Expectation-Maximisation, Variational Bayes, Gibbs Sampling, etc
+		\item Generative process for $N$ data points:
+		\begin{itemize}
+			\item For each datapoint, $n$:
+			\begin{itemize}
+				\item Sample a component ($k$) according to $P(k)$.
+				\item Sample $\bx_n\sim p(\bx_n|k)$
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Gibbs sampling for mixture models}
+	\begin{itemize}
+		\item Assume that the $k$th mixture component has parameters $\theta_k$.
+		\item Define binary variables $z_{nk}$ where $z_{nk}=1$ if $n$th object is \emph{in} $k$th component and zero otherwise.
+		\item Define $\pi_k = P(k)$.
+		\item Define prior density on $\theta_k$: $p(\theta_k)$.
+		\item For each iteration:
+		\begin{itemize}
+			\item Sample each $\theta_k$ from $p(\theta_k|\ldots) \propto p(\theta_k)\prod_n p(\bx_n|\theta_k)^{z_{nk}}$\\
+			\item For each object $n$:
+			\begin{itemize}
+				\item Remove from its current component.
+				\item Sample a new component: $P(z_{nk}=1|\ldots)\propto \pi_k p(\bx_n|\theta_k)$
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Being Bayesian}
+	\begin{itemize}
+		\item We should treat $\boldsymbol\pi = [\pi_1,\ldots,\pi_K]^T$ as a random variable.
+		\item A suitable prior density is the Dirichlet:
+		\[
+			p(\boldsymbol\pi_k)  = \frac{\Gamma(\sum_k \beta)}{\prod_k \Gamma(\beta)}\prod_k \pi_k^{\beta_k-1}
+		\]
+		\item (from now on, we'll assume $\beta_k = \alpha/K~~\forall k$)
+		\item<2->We will also assume that (\emph{a-priori}) the number of objects in each cluster ($c_k = \sum_n z_{nk}$) is multinomial with parameter $\bpi$:
+		\[
+			p(\mathbf{c}|\bpi) \propto \prod_k \pi_k^{c_k}
+		\]
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Being Bayesian}
+	\begin{itemize}
+		\item We can now compute the posterior density for $\bpi$. It's another Dirichlet:
+		\[
+			p(\bpi|\mathbf{c},\alpha) =  \frac{\Gamma(\sum_k \alpha/K+c_k)}{\prod_k \Gamma(\alpha/K+c_k)}\prod_k \pi_k^{\alpha/K+c_k-1}
+		\]
+		\item<2->We can now also compute the probablity that some new observation would be placed in class $j$:
+		\begin{eqnarray}
+			\nonumber P(z_{*j} &=& 1|\mathbf{c},\alpha) = \int p(z_{*j}=1|\bpi)p(\bpi|\mathbf{c},\alpha)~d\bpi\\
+			\nonumber &=& \int \pi_j p(\bpi|\mathbf{c},\alpha)\\
+			\nonumber &=& \frac{c_j + \alpha/K}{\alpha + \sum_k c_k}
+		\end{eqnarray}
+		\item<2-> (Need to know that $\Gamma(z+1) = z\Gamma(z)$)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Gibbs sampling again}
+	\begin{itemize}
+		\item Going back to our Gibbs sampling, we can replace $\pi_k$ with this expression:
+		\[
+			P(z_{nk}=1|\ldots)\propto \frac{c_k + \alpha/K}{\alpha + \sum_j c_j} p(\bx_n|\theta_k)
+		\]
+		\item Where the point being sampled shouldn't appear in any $c_j$ (i.e. $\sum_j c_j = N-1$)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sampling from the prior}
+	\begin{itemize}
+		\item We can ignore the data $\bx_n$ for a while and just sample partitions from this prior:
+		\item Start with N objects, all in one cluster.
+		\item For each iteration:
+		\begin{itemize}
+			\item For each object $n$:
+			\begin{itemize}
+				\item Remove from component it is in and re-assign with probability:
+				\[
+					P(z_{nk} = 1|\ldots) = \frac{c_k + \alpha/K}{\alpha + \sum_j c_k}
+				\]
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sampling from the prior}
+	\begin{figure}[tbh]
+		\centering\includegraphics[height=0.8\linewidth,angle=90]{DPfixed.pdf}
+		\centering\caption{\label{fig:dpfixed}Number of non-empty components as $\alpha$ is increased. $N=100$ and $K=20$. $\alpha$ controls how clustered the data are. Low $\alpha$ gives few populated clusters.}
+	\end{figure}
+\end{frame}
