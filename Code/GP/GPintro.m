@@ -261,18 +261,22 @@ for g = 1:length(gamvals)
 end
 
 %% Generative process
-close all
-N = 200;
-x = randn(N,2);
-gam = 1;
-C = kernel(x,x,'gauss',gam) + 1e-6*eye(N);
-f = gausssamp(zeros(N,1),C,1)';
-z = randn(N,1) + f;
-y = zeros(N,1);
-y(z<0) = 0;
-y(z>0) = 1;
-plotClassData(x,y);
-
+for i = 1:3
+    close all
+    N = 100;
+    x = randn(N,2)*10;
+    gam = 0.005;
+    C = kernel(x,x,'gauss',gam) + 1e-6*eye(N);
+    f = gausssamp(zeros(N,1),C,1)';
+    z = randn(N,1).*0.1 + f;
+    y = zeros(N,1);
+    y(z<0) = 0;
+    y(z>0) = 1;
+    plotClassData(x,y);
+    setupPlot;
+    fname = sprintf('gendata%g.eps',i);
+    makePDF(fname);
+end
 %% Multi-class example
 x = [randn(20,2)+repmat([2 0],20,1);
     randn(20,2) + repmat([-2 0],20,1);
