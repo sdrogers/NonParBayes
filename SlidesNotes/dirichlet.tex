@@ -218,9 +218,26 @@
 \begin{frame}
 	\frametitle{Example}
 	\begin{figure}[tbh]
-		\centering\includegraphics<1>[width=0.8\linewidth]{CRP_data.pdf}
-		\centering\includegraphics<2>[width=0.8\linewidth]{CRP_sim.pdf}
-		\centering\includegraphics<3>[width=0.8\linewidth]{CRP_K.pdf}
-		\centering\caption{\label{fig:CRP_example}Example output from CRP with Gibbs sampling. The data has three clusters. Visualising the $\theta_k$ is impossible, but we can look at the probablility that two objects are in the same cluster, and the number of clusters.}
+		\centering\includegraphics<1>[width=0.7\linewidth]{CRP_data.pdf}
+		\centering\includegraphics<2>[width=0.7\linewidth]{CRP_sim.pdf}
+		\centering\includegraphics<3>[width=0.7\linewidth]{CRP_K.pdf}
+		\centering\caption{\label{fig:CRP_example}Example output from CRP with Gibbs sampling. The data has three clusters. Visualising the $\theta_k$ is impossible, but we can look at the probablility that two objects are in the same cluster, and the number of clusters. (Data are sorted)}
 	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Some practical tips}
+	\begin{itemize}
+		\item This works much better with conjugate models.
+		\item Making it work on real problems is hard.
+		\item It's not magic.
+		\begin{itemize}
+			\item Avoid specifying how many clusters there are\ldots
+			\item \ldots but have to quite precisely speciy what a cluster looks like.
+		\end{itemize}
+		\item How to interpret the output?
+		\begin{itemize}
+			\item Great for things where the clustering is the \emph{input} to something else
+		\end{itemize}
+	\end{itemize}
 \end{frame}
