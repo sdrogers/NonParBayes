@@ -90,7 +90,7 @@ makePDF('DPbars.eps');
 %% DP Mixture example
 % Sample some nice data
 x = [randn(50,1)-5;randn(50,1);randn(50,1)+5];
-
+x = sort(x);
 base_mean = 0;
 base_prec = 0.01;
 obs_prec = 1;
@@ -167,8 +167,17 @@ for it = 1:NITS
         simMatrix(pos,pos) = simMatrix(pos,pos) + 1;
     end
     if rem(it,10)==0
+        figure(1);
         imagesc(simMatrix);drawnow
+        figure(2);
+        hold off
+        for k = 1:K
+            pos = find(Z==k);
+            plot(x(pos),zeros(size(pos)),'o','markersize',20);
+            hold all
+        end
     end
+    
     nClusters(it) = K;
 end
 %%
