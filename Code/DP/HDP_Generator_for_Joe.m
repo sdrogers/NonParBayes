@@ -1,6 +1,6 @@
 %% Generate some data from a HDP
 base_mean = 0;
-base_prec = 5e-3;
+base_prec = 1e-2;
 
 obs_prec = 1;
 
@@ -92,3 +92,6 @@ setupPlot
 xlabel('x');
 ylabel('Dataset');
 makePDF('hdp_data.eps');
+
+
+
