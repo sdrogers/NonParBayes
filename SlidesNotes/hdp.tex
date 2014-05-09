@@ -49,7 +49,24 @@
 		\begin{itemize}
 			\item 5 datasets
 			\item 4 top level components (dashed line)
-			\item Each data has data from a subset
+			\item Each data has data from a subset of components
 		\end{itemize}
 	\end{multicols}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\ac{HDP} inference example}
+	\begin{multicols}{2}
+	\begin{itemize}
+		\item 300 posterior samples.
+		\item Does pretty good job.
+		\item At last sample, posterior means over top-level components were: 12.5215, -17.0304, -9.0535, 8.7857, -17.5636, -16.12
+		\item True: [12.5185,-9.0909,-17.5295,9.1839]
+	\end{itemize}
+	\newpage
+	\includegraphics[width=\linewidth]{hdp_inference}		
+	\end{multicols}
+	\begin{itemize}
+		\item Note that mixing would be improved by also re-sampling assignment of clusters to top components.
+	\end{itemize}
 \end{frame}

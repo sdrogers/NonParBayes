@@ -1,11 +1,11 @@
 % Gibbs sampling for a hierarchical DP
-function hdp_sample(x)
+function o = hdp_sample(x)
 % Data must be stored in x{}
 
-NITS = 1000;
+NITS = 300;
 
 base_mean = 0;
-base_prec = 1e-6;
+base_prec = 1e-2;
 
 obs_prec = 1;
 
@@ -151,6 +151,7 @@ for it = 1:NITS
     postmean
     
 end
+o = allN_top;
 
 function l = clusterlike(x,top_N,top_S,base_mean,base_prec,obs_prec)
 
@@ -205,4 +206,4 @@ if sum(abs(new_top_S-top_S)>1e-9) > 0
     keyboard
 end
 
-o =1;
+
