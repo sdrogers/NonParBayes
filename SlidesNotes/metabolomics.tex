@@ -16,6 +16,126 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{\ac{LS}/\ac{MS}}
-	
+	\frametitle{\ac{MS}}
+	\centering\includegraphics[width=0.5\linewidth]{spectra}
+	\begin{itemize}
+		\item Output of \ac{MS} is a set of mass-intensity pairs (peaks).
+		\item Each peak corresponds to one ion.
+		\item Each metabolite can result in many different ions:
+		\begin{itemize}
+			\item Different ions (i.e. $H^+,K^+$)
+			\item Isotopes
+		\end{itemize}
+		\item All have predictable theoretical mass (for particular metabolite)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\ac{LC}/\ac{MS}}
+	\begin{multicols}{2}
+		\begin{itemize}
+			\item Most samples are too complex for a single \ac{MS} analysis
+			\item First \emph{separate} the sample via \ac{LC}
+			\item Perform many \ac{MS} analysis at different \ac{RT}
+		\end{itemize}
+		\newpage
+		\includegraphics[width=\linewidth]{lcms}\\
+		\href{http://www.beilstein-institut.de/glycobioinf2009/ProceedingsWeb/Peltoniemi/Peltoniemi.html}{(image from Peltoniemi et.~al)}
+	\end{multicols}
+\end{frame}
+
+\begin{frame}
+	\frametitle{What are the peaks?}
+	\begin{itemize}
+		\item How do we identify things in this 2D image?
+		\item Doing each peak separately (traditional approach; searching mass against a database) leads to many false positives
+		\item Can we use the fact that all peaks for a single metabolite will have very similar \ac{RT}?
+		\begin{itemize}
+			\item If we look for a particular metabolite, we should see a predictable set of mass peaks at the same \ac{RT}
+			\item Use a \ac{DP} mixture model\ldots
+			\item Using the dependency information between peaks to improve identification
+			\item Get probabilities of identification rather than hard decisions
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MetAssign}
+	\includegraphics[width=\linewidth]{metassign}
+	\begin{itemize}
+		\item Database matches for each peak can be thought of as prior annotations
+		\item After clustering we have posterior matches
+		\begin{itemize}
+			\item Note that by averaging over all clusterings we get posterior assignments for each peak.
+			\item i.e. we are not interested in one clustering.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{MetAssign}
+	\centering\includegraphics[width=\linewidth]{plates3}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MetAssign}
+	\begin{itemize}
+		\item Model consists of $K$ clusters
+		\item Each cluster is linked to a metabolite from the database ($\phi_k$)
+		\item The metabolite links lets us work out what masses ($y_{mai}$) and intensity relationships ($\beta_{mai}$) (for isotopes) we ought to see
+		\item Each cluster has a retention time $l_k$
+		\item Each adduct (ionisation type) has an intensity ($\lambda_{ka}$)
+		\item $z_{nk}$ defines cluster membership for peak $n$
+		\item $v_{nkai}$ defines membership within the cluster
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MetAssign: inference}
+	\begin{itemize}
+		\item Gibbs sampling updates are all fairly straightforward (assuming Gaussian noise everywhere)
+		\item Can also include Metropolis-Hastings steps for changing which metabolite a cluster is assigned to
+		\item Quite slow
+		\item Proportion of times a peak is assigned to a metabolite (via a cluster) gives posterior probability
+		\item Access to posterior samples lets us do useful things
+		\begin{itemize}
+			\item e.g. only consider assignments of peaks if all bigger isotope peaks are present
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MetAssign: results}
+	\centering\includegraphics<1>[width=\linewidth]{metassign_pr}
+	\centering\includegraphics<2>[width=\linewidth]{metassign_roc}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Conclusions}
+	\begin{itemize}
+		\item Excellent performance (better than state of the art)
+		\item \ac{DP} prior allows us to not fix number of metabolites \emph{a-priori}
+		\item Probabilities are obtained by averaging over the clusterings
+		\item Probabilistic assignments are useful for the experimenters
+		\item Gibbs sampling is easy to implement (although a pain to make efficient)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Future work}
+	\begin{itemize}
+		\item Incorporate predicted \ac{RT}
+		\begin{itemize}
+			\item It is possible to predict (badly) the \ac{RT} of a particular metabolite
+			\item Can easily be incorporated into the model through a metabolite-specific \ac{RT} prior
+		\end{itemize}
+		\item<2-> Incorporate connectivity
+		\begin{itemize}
+			\item Metabolites live in networks (e.g. reactions)
+			\item We've previously used this to aid identification \href{http://dx.doi.org/10.1093/bioinformatics/btn642}{(Rogers et.~al 2009)}
+			\item Can be incorporated into the Metropolis-Hastings step to \emph{a-priori} make highly connected metabolites more likely
+		\end{itemize}
+		\item<3-> Note: MetAssign currently under revision. When (if) published, search for `Rogers Daly Breitling metassign bioinformatics' 
+	\end{itemize}
 \end{frame}
