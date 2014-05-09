@@ -208,3 +208,7 @@ xlabel('K');
 ylabel('Frequency');
 makePDF('CRP_K.eps');
 
+
+%% Sample from a HDP
+
+

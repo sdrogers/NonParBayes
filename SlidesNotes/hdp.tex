@@ -10,6 +10,7 @@
 		\begin{itemize}
 			\item e.g. datasets clustered individually but cluster parameters (e.g. means) can be \emph{shared}
 			\item Analogy: The Chinese Restaurant Franchise
+			\item Described in \href{http://www.cs.berkeley.edu/~jordan/papers/hdp.pdf}{Teh et.~al}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -22,6 +23,33 @@
 \begin{frame}
 	\frametitle{The Chinese Restaurant Franchise}
 	\begin{itemize}
-		\item 
+		\item Gibbs sampling is very similar to the single restaurant case
+		\item Each object is re-assigned to a table with probabilities ($i$ indexes datasets):
+		\[
+			P(z_{ink} = 1|\ldots)\propto \left\{
+			\begin{array}{cc}
+				n_{ik}p(\bx_{in}|\theta_k) & \mbox{for current table}\\
+				\alpha p(\bx_{in}) & \mbox{for new $k$}
+			\end{array}
+			\right.			
+		\]
+		\item $p(\bx_{in})$ is computed by marginalising all possible values for the parameters at the new tables.
+		\begin{itemize}
+			\item These include values used for current tables (with prior proportional to the number of tables they're used at) and a completely new value (with prior proportional to, say, $\gamma$).
+			\item i.e. There are \ac{DP}s for assignment of objects to tables and assignment tables to parameters.
+		\end{itemize}
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Data sampled from a \ac{HDP}}
+	\begin{multicols}{2}
+		\centering\includegraphics[width=\linewidth]{hdp_data}
+		\newpage
+		\begin{itemize}
+			\item 5 datasets
+			\item 4 top level components (dashed line)
+			\item Each data has data from a subset
+		\end{itemize}
+	\end{multicols}
 \end{frame}
