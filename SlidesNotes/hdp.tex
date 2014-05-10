@@ -70,3 +70,17 @@
 		\item Note that mixing would be improved by also re-sampling assignment of clusters to top components.
 	\end{itemize}
 \end{frame}
+
+\iftasks{
+	\begin{frame}
+		\frametitle{HDP Exercise}
+		\begin{task}
+			\begin{itemize}
+				\item \texttt{HDP\_task.m} allows you to sample data from a HDP and then perform inference
+				\item Try varying $\alpha$ and $\gamma$ to see the effect, and the number of datasets
+				\item Switch \texttt{resampletables} on and off to see the effect on the number of components
+				\item You'll also need \texttt{lognormpdf.m}, \texttt{clusterlike.m}, \texttt{hdp\_sample.m}
+			\end{itemize}
+		\end{task}
+	\end{frame}
+}
