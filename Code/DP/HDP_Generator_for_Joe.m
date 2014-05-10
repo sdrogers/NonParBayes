@@ -5,7 +5,7 @@ base_prec = 1e-2;
 obs_prec = 1;
 
 J = 5; % Number of files
-N = 100; % 100 observations in all files
+N = 50; % 100 observations in all files
 top_components = [];
 top_counts = [];
 nTop = 0;
@@ -93,5 +93,12 @@ xlabel('x');
 ylabel('Dataset');
 makePDF('hdp_data.eps');
 
-
-
+%%
+out = hdp_sample(x)
+%%
+close all
+hist(out,[1:10]);
+setupPlot
+xlabel('Number of top-level components');
+ylabel('Frequency')
+makePDF('hdp_inference.eps');
