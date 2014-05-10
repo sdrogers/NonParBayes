@@ -1,6 +1,6 @@
 % GP intro
 
-\lecture{Gaussian Process Basics}
+\lecture{Gaussian Process Basics}{gpintro}
 
 \begin{frame}
 	\frametitle{Gaussian Processes}
@@ -132,10 +132,7 @@ C(\bx_1,\bx_2) = \exp\left\{-0.5\gamma ||\bx_1 - \bx_2||^2 \right\}
 	\end{figure}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Optimising hyper-parameters}
-	
-\end{frame}
+
 
 \begin{frame}
 	\frametitle{Making predictions}
@@ -233,3 +230,44 @@ C(\bx_1,\bx_2) = \exp\left\{-0.5\gamma ||\bx_1 - \bx_2||^2 \right\}
 	\end{figure}
 \end{frame}
 
+\iftasks{
+	\begin{frame}
+		\frametitle{GP Exercise}
+		\begin{task}
+			\begin{itemize}
+				\item Experiment with the \texttt{gp\_task.m} script (in Matlab or Octave)
+				\item Try:
+				\begin{itemize}
+					\item Generating data from different functions
+					\item Using different covariance/noise parameters
+					\item Using different covariance functions (there are lots in \texttt{kernel.m})
+				\end{itemize}
+				\item You'll also need \texttt{gausssamp.m} and \texttt{kernel.m}
+			\end{itemize}
+		\end{task}
+	\end{frame}
+}
+
+\begin{frame}
+	\frametitle{Optimising hyper-parameters}
+	\begin{itemize}
+		\item Can use standard methods (e.g. Cross-validation)
+		\item Or maximise the marginal likelihood
+		\[
+			\underset{\sigma^2,\gamma}{\mbox{argmax}}~~p(\by|\bX)
+		\]
+		\item $p(\by|\bX)$ available analytically (by marginalising $\bf$):
+		\[
+		\log p(\by|\bX) = -\frac{1}{2}\by^T(\mathbf{C}+\sigma^2\bI)^{-1}\by - \frac{1}{2}\log | \mathbf{C} + \sigma^2\bI | - \frac{N}{2}\log 2\pi
+		\]
+		\item Most implementations (e.g. gpml) provide marginal likelihood maximisation routines
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Summary}
+	\begin{itemize}
+		\item \ac{GP}s offer a flexible alternative to parametric regression
+		\item If observation noise is Gaussian, all required densities are available analytically
+	\end{itemize}
+\end{frame}

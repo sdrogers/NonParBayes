@@ -153,6 +153,28 @@
 	\end{center}
 \end{frame}
 
+
+\iftasks{
+	
+	\begin{frame}
+		\frametitle{GP classification exercise}
+		\begin{task}
+			\begin{itemize}
+				\item Explore GP binary classification with auxiliary variables using \texttt{gp\_class\_task.m}
+				\item Try:
+				\begin{itemize}
+					\item Generating data from different distributions
+					\item Varying covariance function and parameters
+					\item Taking more posterior samples
+				\end{itemize}
+			\item You will also need \texttt{plotClassdata.m} and \texttt{kernel.m}
+			\end{itemize}
+		\end{task}
+		
+	\end{frame}
+
+}
+
 \begin{frame}
 	\frametitle{A more general idea}
 	\begin{itemize}
@@ -291,6 +313,20 @@
 		\centering\caption{\label{fig:ncnm_a0.5}NCNM GP classification}
 	\end{figure}
 \end{frame}
+
+\iftasks{
+	\begin{frame}
+		\frametitle{NCNM Exercise}
+		\begin{task}
+			\begin{itemize}
+				\item Experiment with the NCNM using \texttt{gp\_ncnm\_task.m}
+				\item Setting \texttt{a=0} results in the standard model
+				\item Setting \texttt{a>0} uses the NCNM
+				\item It's not always easy to get the results you want to see!
+			\end{itemize}
+		\end{task}
+	\end{frame}
+}
 
 \begin{frame}
 	\frametitle{Multi-class \ac{NCNM}}
