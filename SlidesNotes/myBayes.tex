@@ -18,17 +18,29 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Why Be Bayesian?}
+	\begin{itemize}
+		\item<2->Ability to incoroporate prior information?
+		\item<3->Ability to compute posterior densities (combine prior with likelihood)?
+		\item<4->Ability to compare models via marginal likelihood?
+		\item<5->For me: the ability to integrate out model parameters completely\ldots
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
 	\frametitle{Why be Bayesian?}
 	\begin{itemize}
-		\visible<2->{
+		\item We're often not interested in parameter values
+		\item We're normally interested in something that is a function of the parameter values e.g.:
+		\begin{itemize}
 			\item Within \ac{ML} we are often interested in making predictions (predicing $y_*$ from $\bx_*$).
+			\item This will often require values of some parameters $\bPars$
 			\item Being Bayesian allows us to \emph{average} over uncertainity in parameters when making predictions:
 			\[
 				p(y_*|\bx_*,\bX) = \int p(y_*|\bx_*,\bPars)p(\bPars|\bX)~d\bPars
-			\]
-		}
-		\visible<3->{
-			\item Bayes rule tells us how this uncertainty should change as data appear.
-		}
+			\]		
+		\end{itemize}
+		\item This for me, is the biggest Bayesian selling point!
 	\end{itemize}
 \end{frame}

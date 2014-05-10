@@ -1,0 +1,52 @@
+% Summary
+\lecture{Summary}{summary}
+
+\begin{frame}
+	\frametitle{Summary: GPs}
+	\begin{itemize}
+		\item Flexible method for regression
+		\item Auxiliary variable trick allows:
+		\begin{itemize}
+			\item Binary classification
+			\item Multi-class classification
+			\item Semi-supervised classification
+			\item Ordinal regression
+		\end{itemize}
+		\item Applications:
+		\begin{itemize}
+			\item Modelling uncertainty in text entry
+			\item Investigating the disagreement between \ac{AE} clinicians
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Summary: DPs}
+	\begin{itemize}
+		\item Infinite prior for mixture models
+		\item Infer the number of clusters
+		\item No magic: The cost is that we have to define what a cluster is quite precisely
+		\item Applications:
+		\begin{itemize}
+			\item Identifying metabolites
+			\item Finding patterns across different datasets
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Summary: all}
+	\begin{itemize}
+		\item \ac{GP}s and \ac{DP}s allow computationally tractable Bayesian inference
+		\item In all applications, inference of the curve, or clustering was only an intermediate step:
+		\begin{itemize}
+			\item \emph{Typing}: propogate uncertainty in key predictions
+			\item \emph{Clinicians}: average over curve to infer characteristics of clinicians
+			\item \emph{Metabolomics}: average over clustering to annotate peaks
+			\item \emph{Multiview}: average over clusterings to extract biological information
+		\end{itemize}
+		\item Thinking about what the results of regression / clustering will be used for is useful.
+		\item \ac{GP} and \ac{DP} provide access to the posterior and therefore the ability to average over it
+	\end{itemize}
+\end{frame}
