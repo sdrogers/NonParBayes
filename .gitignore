@@ -12,6 +12,6 @@
 *.toc
 *.vrb
 *.fdb_latexmk
-octave_workspace
+*_workspace
 *.sublime-workspace
 .DS_Store
