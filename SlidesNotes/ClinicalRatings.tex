@@ -50,7 +50,7 @@
 		\item<2-> The model:
 		\begin{itemize}
 			\item Patient health is modelled as a GP.
-			\item Corrupted health is the auxiliary variable ($q$)
+			\item Corrupted health is the auxiliary variable ($q$) -- one set of auxiliary variables per clinician
 			\item $q$ is binned to produce rating.
 			\item Note that $p(q|f)$ has been generalised from standard normal.
 		\end{itemize}
@@ -90,14 +90,54 @@
 	\frametitle{Model inference}
 	\begin{itemize}
 		\item Gibbs sampling is straightforward
-		\item We sample:
 		\begin{itemize}
 			\item The latent health function for each patient.
-			\item The auxiliary variables.
-			\item The offset and precision for each clinician.
+			\[
+				p(\blf^p|\ldots) = {\cal N}(\blf^p|\boldsymbol\mu_{\blf^p},\boldsymbol\Sigma_{\blf^p})
+			\]
+			where:
+			\[
+				\boldsymbol\Sigma_{\blf^p} = \left((\mathbf{C}^p)^{-1} + \sum_c \gamma_c\mathbf{I}\right)^{-1},~~~\boldsymbol\mu_{\blf^p} = \boldsymbol\Sigma_{\blf^p}\sum_c \gamma_c (\mathbf{q}^p_{c\cdot} - \delta_c)
+			\]
+			\item The auxiliary variables:
+			\[
+				p(q_{c\tau}^p|y_{c\tau}^p = k,\ldots) \propto \delta(b_k<q_{c\tau}^p<b_{k+1}) {\cal N}(q_{c\tau}^p|f^p_\tau + \delta_c,\gamma_c^{-1})
+			\]
 		\end{itemize}
-		\item<2->The offset and precision tell us how the clinicians disagree.
-		\item<3->Identifiability: offset for one clinician fixed to 0.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item Gibbs sampling continued:
+		\begin{itemize}
+			\item The offset and precision for each clinician:
+			\[
+				p(\delta_c|\ldots) = {\cal N}(\delta_c|\mu_c,\sigma_c^2),~~~p(\gamma_c|\ldots) = {\cal G}(a_c,b_c)
+			\]
+			where:
+			\[
+				\sigma_c^2 = \left(1 + N_{c}\right)^{-1},~~~\mu_c = \gamma_c\sigma_c^2\sum_p\sum_\tau(q_{c\tau}^p - f_{\tau}^p)
+			\]
+			and:
+			\[
+				a_c = \alpha + N_c/2,~~~b_c = \beta+\frac{1}{2}\sum_p\sum_\tau(q_{c\tau}^p - f_{\tau}^p)^2
+			\]
+			and $N_c$ is the total number of observations for clinician $c$.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Inference and Interpretation}
+	\begin{itemize}
+		\item The offset and precision tell us how the clinicians disagree.
+		\begin{itemize}
+			\item Low precision indicates a clinician who is very unpredictable (w.r.t the rest)
+			\item High offset indicates a precision who consistently rates higher or lower than the norm.
+		\end{itemize}
+		\item<2->Identifiability: offset for one clinician fixed to 0.
+		\item<2->Covariance parameter for GP inferred via Metropolis-Hastings (see e.g. \href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.45.9111}{Rasmussen 2000})
 	\end{itemize}
 \end{frame}
 
@@ -127,11 +167,28 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Results}
+	\begin{multicols}{2}
+	\includegraphics[width=\linewidth]{patienttrace}
+	\newpage
+	\begin{itemize}
+		\item Posterior health function for one patient
+		\item Shaded area shows boundaries of posterior samples
+		\item Dashed lines show maximum and minimum clinician ratings
+		\begin{itemize}
+			\item Note the range: initially patient rated both A and E!
+		\end{itemize}
+	\end{itemize}
+	\end{multicols}
+\end{frame}
+
+\begin{frame}
 	\frametitle{INSIGHT}
 	\begin{itemize}
 		\item After the initial annotation, clinicians went through INSIGHT procedure.
 		\item The goal was to make ratings more consistent.
-		\item If it succeeded, we should see a recuction in offset and increase in precision in the post-INSIGHT data.
+		\item If it succeeded, we should see a reduction in offset and increase in precision in the post-INSIGHT data.
+		\item Note: only 5 clinicians remained after INSIGHT
 	\end{itemize}
 \end{frame}
 
@@ -142,6 +199,16 @@
 		\subfigure[Precisions]{\includegraphics[width=.45\linewidth]{Precision_before_after_April19th.pdf}}
 		\centering\caption{\label{fig:clinoffprec}Offsets and precision before and after INSIGHT. Offsets get closer to 0, whilst precision increase suggesting greater agreement amongsth clinicians.}
 	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Post-INSIGHT results}
+	\centering\includegraphics[width=\linewidth]{patienttrace_after}
+	\begin{itemize}
+		\item Patient health function before and after INSIGHT
+		\item Less smooth after INSIGHT
+		\item Range of ratings much reduced
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -178,4 +245,22 @@
 			\item Incorporated offset and precision without causing additional inference challenges.
 		\end{itemize}
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Future work}
+	\begin{itemize}
+		\item Incorporate measured covariates:
+		\begin{itemize}
+			\item HR, BP, etc
+			\item Predictive model? (would need better ground truth)
+		\end{itemize}
+		\item Patient-specific covariance parameters
+		\item Non-stationary covariance parameters
+		\begin{itemize}
+			\item Long periods of no change followed by short periods of fast change
+		\end{itemize}
+		\includegraphics[width=0.7\linewidth]{patienttrace_after}
+	\end{itemize}
+
 \end{frame}
