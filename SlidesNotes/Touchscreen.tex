@@ -73,7 +73,36 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Our idea}
+	\frametitle{The model}
+	\begin{itemize}
+		\item We use independent GP regressions for predicting $x$ and $y$ offsets.
+		\item Training data:
+		\begin{itemize}
+			\item Each user typed phrases provided to them.
+			\item Data: the $x,y$ location of the recorded touch (i.e. $\bx_n = [x_n,y_n]^T$). Target: the center of the intended key minus the touch (i.e. the offset).
+		\end{itemize}
+		\item<2-> Used a \ac{GP} with zero mean and a composite covariance:
+		\[
+			C(\bx_1,\bx_2) = a \bx_1^T\bx_2 + (1-a)\exp \{ -\gamma || \bx_1 - \bx_2 ||^2 \}
+		\]
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The model}
+	\centering\includegraphics[width=0.7\linewidth]{touchmodel}
+	\begin{itemize}
+		\item $x$ and $y$ offsets both depend on $x$ and $y$ position of touch
+		\item Have also used raw capacitive sensor data as input
+		\begin{itemize}
+			\item Potentially better (more info) but only accessible on some devices
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{System cartoon}
 	\begin{figure}
 		\centering\includegraphics<1>[width=0.8\linewidth]{cartoon1.pdf}
 		\centering\includegraphics<2>[width=0.8\linewidth]{cartoon2.pdf}
@@ -84,28 +113,13 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Our idea}
+	\frametitle{System cartoon}
 	\begin{figure}[tbh]
 		\centering\includegraphics[width=\linewidth]{touchcartoon.pdf}
 		\centering\caption{\label{fig:touchcartoon}The complete system}
 	\end{figure}
 \end{frame}
 
-\begin{frame}
-	\frametitle{The model}
-	\begin{itemize}
-		\item We use independent GP regressions for predicting $x$ and $y$ offsets.
-		\item Training data:
-		\begin{itemize}
-			\item Each user typed phrases provided to them.
-			\item Data: the $x,y$ location of the recorded touch. Target: the center of the intended key minus the touch (i.e. the offset).
-		\end{itemize}
-		\item<2-> Used a \ac{GP} with zero mean and a composite covariance:
-		\[
-			C(\bx_1,\bx_2) = a \bx_1^T\bx_2 + (1-a)\exp \{ -\gamma || \bx_1 - \bx_2 ||^2 \}
-		\]
-	\end{itemize}
-\end{frame}
 
 \begin{frame}
 	\frametitle{Video}

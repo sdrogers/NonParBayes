@@ -31,11 +31,28 @@
 		\item $p=1\ldots P$ patients.
 		\item For patient $p$, we have $T_p$ observations at times $\mathbf{t}_p = [t_{p1},\ldots,t_{pT_p}]^T$.
 		\item $y_{\tau c}^p$ is rating at $t_{p\tau}$ ($\{A,B,C,D,E\}$).
-		\item The model:
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The model}
+		\begin{itemize}
+		\item Assumptions:
+			\begin{itemize}
+				\item We assume that there is an unobserved continuous latent health function for each patient
+				\item Each clinician observes this and and corrupts it in two ways:
+					\begin{itemize}
+						\item Adds Gaussian noise
+						\item Adds a constant offset (optimist, pessimist)
+					\end{itemize}
+				\item Corrupted health is then binned to give category
+			\end{itemize}
+		\item<2-> The model:
 		\begin{itemize}
 			\item Patient health is modelled as a GP.
-			\item Each clinician has their own offset and precision used to \emph{corrupt} the health function ($q$).
+			\item Corrupted health is the auxiliary variable ($q$)
 			\item $q$ is binned to produce rating.
+			\item Note that $p(q|f)$ has been generalised from standard normal.
 		\end{itemize}
 	\end{itemize}
 \end{frame}
