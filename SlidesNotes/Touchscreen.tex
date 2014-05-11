@@ -26,8 +26,10 @@
 		\visible<2->{
 			\item Quite a bit of work in this area:
 			\begin{itemize}
-				\item Add some
+				\item Holz and Baudisch
+				\item Henze (100,000,000 taps)
 			\end{itemize}
+			\item Collecting data is fairly easy
 			}
 	\end{itemize}
 \end{frame}
@@ -102,8 +104,26 @@
 		\[
 			C(\bx_1,\bx_2) = a \bx_1^T\bx_2 + (1-a)\exp \{ -\gamma || \bx_1 - \bx_2 ||^2 \}
 		\]
-		\item<3->10 participants, each did $3\times$ 45 minute sessions, typing whilst sitting, standing and walking. [more details in paper]
-		\item<4->Compared:
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Video}
+	\begin{itemize}
+		\item \url{http://www.youtube.com/watch?v=llQI5gV5l74}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The experiment}
+	\begin{itemize}
+		\item 10 participants
+		\item Calibration data collected for each
+		\begin{itemize}
+			\item Note: calibration task matters
+		\end{itemize}
+		\item each did $3\times$ 45 minute sessions, typing whilst sitting, standing and walking. [more details in paper]
+		\item Compared:
 		\begin{itemize}
 			\item GPtype (our system), Swiftkey (commercial Android keyboard), GP only (just offset, no \ac{SLM}), baseline (boxing, no \ac{SLM}).
 		\end{itemize}
@@ -126,16 +146,65 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Explicit uncertainity control}
+	\begin{itemize}
+		\item In GPType, uncertainity is handled implicitly
+		\item As user typing becomes more uncertain, more power given to language model
+		\item Could users \emph{explicitly} control this?
+		\begin{itemize}
+			\item Certain inputs: no \ac{SLM} control (slang, names, etc)
+			\item Uncertain inputs: high \ac{SLM} control
+		\end{itemize}
+		\item Use pressure to control certainty:
+		\begin{itemize}
+			\item High pressure: high certainty
+			\item Low pressure: low certainty
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Do users know when \ac{SLM} will fail?}
+	\centering\includegraphics[width=\linewidth]{autocorrect}
+	\begin{itemize}
+		\item Users given phrases and asked whether they thought autocorrect would change them incorrectly
+		\item Users quite good at understanding \ac{SLM} failings
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{ForceType}
+	\centering\includegraphics[width=0.6\linewidth]{forcetype}
+	\begin{itemize}
+		\item Modified Synaptics Forcepad
+		\item Pressure mapped to Gaussian variance (no \ac{GP})
+		\item System explained to users
+		\item Users type phrases with and without forcetype
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{ForceType: Results}
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{forcetype_results}
+		\newpage
+		\vfill
+		\begin{itemize}
+			\item Forcetype reduced number of corrections performed by users (top)
+			\item Forcetype improved overall text entry rate
+		\end{itemize}
+		\vfill
+	\end{multicols}
+\end{frame}
+
+\begin{frame}
 	\frametitle{Conclusions}
 		\begin{itemize}
 			\item GP regression is key to the approach: we make no parametric assumptions (what would they be?)
 			\item \ldots and get probabilistic predictions
 			\item \ldots that can be fed to the \ac{SLM} -- (un)certainity is passed to the \ac{SLM}
 			\item Performance is promising
-			\item<2->Also in the paper:
-			\begin{itemize}
-				\item Using \emph{pressure} to allow users \emph{explicit} control of variance. Allows users to switch \ac{SLM} off (when tying slang / names etc) or rely on it more for words they think it will get right (humans are quite good at predicting auto-correct errors).
-			\end{itemize}
+			\item<2->Can also use pressure to provide explicit uncertainty control
 			\item<3->More info:
 			\begin{itemize}
 				\item \url{http://www.youtube.com/watch?v=llQI5gV5l74}
