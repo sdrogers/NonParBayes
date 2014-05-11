@@ -15,3 +15,4 @@
 *_workspace
 *.sublime-workspace
 .DS_Store
+*.key

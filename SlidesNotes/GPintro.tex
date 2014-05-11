@@ -32,29 +32,29 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Visual example -- prior}
-	\begin{figure}[tbh]
-		\includegraphics[width=0.7\linewidth]{gpintro_prior.pdf}		
-		\centering\caption{\label{fig:gpintro_prior}Some functions drawn from a \ac{GP} prior.}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Visual example -- prior}
+% 	\begin{figure}[tbh]
+% 		\includegraphics[width=0.7\linewidth]{gpintro_prior.pdf}		
+% 		\centering\caption{\label{fig:gpintro_prior}Some functions drawn from a \ac{GP} prior.}
+% 	\end{figure}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Visual exmample -- posterior}
-	\begin{figure}[tbh]
-		\includegraphics[width=0.7\linewidth]{gpintro_posterior.pdf}		
-		\centering\caption{\label{fig:gpintro_posterior}Some functions drawn from the \ac{GP} posterior. Posterior mean is shown in red.}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Visual exmample -- posterior}
+% 	\begin{figure}[tbh]
+% 		\includegraphics[width=0.7\linewidth]{gpintro_posterior.pdf}		
+% 		\centering\caption{\label{fig:gpintro_posterior}Some functions drawn from the \ac{GP} posterior. Posterior mean is shown in red.}
+% 	\end{figure}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Visual example -- predictions}
-	\begin{figure}[tbh]
-		\includegraphics[width=0.7\linewidth]{gpintro_predictions.pdf}		
-		\centering\caption{\label{fig:gpintro_predictions.pdf}Predictive mean and standard deviations.}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Visual example -- predictions}
+% 	\begin{figure}[tbh]
+% 		\includegraphics[width=0.7\linewidth]{gpintro_predictions.pdf}		
+% 		\centering\caption{\label{fig:gpintro_predictions.pdf}Predictive mean and standard deviations.}
+% 	\end{figure}
+% \end{frame}
 
 \begin{frame}
 	\frametitle{Some formalities}
@@ -120,6 +120,84 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{GP posterior}
+	\begin{itemize}
+		\item We assume that all possible $y_n$ are distributed as \ac{MVG}
+		\item Any subset are also \ac{MVG}
+		\item If we condition on some observed values of $y$, the density of the others is still \ac{MVG}
+		\item Joint density of observed ($\by$) and un-observed ($\by_*$):
+		\[
+				\left[
+					\begin{array}{c}
+						\by \\ \by_*
+					\end{array}
+				\right]
+				\sim 
+				{\cal N} 	\left (
+								\mathbf{0} , 
+								\left [
+									\begin{array}{cc}
+											C(\bX,\bX) & C(\bX,\bX_*) \\ 
+											C(\bX_*,\bX) & C(\bX_*,\bX_*)
+									\end{array}
+								\right ]
+							\right )
+			\]
+			\item And then use standard results for Gaussian conditionals:
+			\[
+				p(\by_*|\by,\bX,\bX_*) = {\cal N}(\boldsymbol\mu_*,\boldsymbol\Sigma_*)
+			\]
+			where
+			\begin{eqnarray}
+				\nonumber \boldsymbol\mu_* &=& C(\bX_*,\bX)C(\bX,\bX)^{-1}\by\\
+				\nonumber \sigma^2_* &=& C(\bX_*,\bX_*) - C(\bX_*,\bX)C(\bX,\bX)^{-1}C(\bX,\bX^*)
+			\end{eqnarray}
+	\end{itemize}
+	{\small \url{http://orion.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{GP example}
+	\includegraphics[width=0.7\linewidth]{interestpoints}
+	\begin{itemize}
+		\item Start by defining which points we're \emph{interested} in
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\includegraphics<1>[width=0.7\linewidth]{priorgam1}
+	\includegraphics<2>[width=0.7\linewidth]{priorgam10}
+	\includegraphics<3>[width=0.7\linewidth]{priorgam100}
+	\begin{itemize}
+		\item We can sample function values at these points from the prior
+		\item As the hyper-parameter changes, the smoothness changes
+		\item Sometimes it's best to draw a continuous line
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\includegraphics[width=0.7\linewidth]{observed}
+	\begin{itemize}
+		\item Observe values of $y$ at some of the points
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\includegraphics[width=0.7\linewidth]{postsample}
+	\begin{itemize}
+		\item Sample from the posterior, conditioned on the observed data
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\includegraphics[width=0.7\linewidth]{margpred}
+	\begin{itemize}
+		\item Marginal predictive mean plus/minus 3 SD 
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
 	\frametitle{Hyper-parameters}
 	\[
 C(\bx_1,\bx_2) = \exp\left\{-0.5\gamma ||\bx_1 - \bx_2||^2 \right\}
@@ -134,101 +212,178 @@ C(\bx_1,\bx_2) = \exp\left\{-0.5\gamma ||\bx_1 - \bx_2||^2 \right\}
 
 
 
+% \begin{frame}
+% 	\frametitle{Making predictions}
+% 	\begin{itemize}
+% 		\item If we assume no observation noise, we can place \ac{GP} prior directly on $\by$
+% 		\item If we observe $\by$ and want to predict $y_*$ for a new observation $\bx_*$:
+% 		\begin{itemize}
+% 			\item Construct joint Density (it's a Gaussian):
+% 			\[
+% 				\left[
+% 					\begin{array}{c}
+% 						\by \\ y_*
+% 					\end{array}
+% 				\right]
+% 				\sim 
+% 				{\cal N} 	\left (
+% 								\mathbf{0} , 
+% 								\left [
+% 									\begin{array}{cc}
+% 											C(\bX,\bX) & C(\bX,\bx_*) \\ 
+% 											C(\bx_*,\bX) & C(\bx_*,\bx_*)
+% 									\end{array}
+% 								\right ]
+% 							\right )
+% 			\]
+% 			\item And then use standard results for Gaussian conditionals:
+% 			\[
+% 				p(y_*|\by,\bX,\bx_*) = {\cal N}(\mu_*,\sigma^2_*)
+% 			\]
+% 			where
+% 			\begin{eqnarray}
+% 				\nonumber \mu_* &=& C(\bx_*,\bX)C(\bX,\bX)^{-1}\by\\
+% 				\nonumber \sigma^2_* &=& C(\bx_*,\bx_*) - C(\bx_*,\bX)C(\bX,\bX)^{-1}K(\bX,\bx^*)
+% 			\end{eqnarray}
+% 		\end{itemize}
+% 	\end{itemize}
+% 	{\small \url{http://orion.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}}
+% \end{frame}
+
+% \begin{frame}
+% 	\frametitle{Noise-free example}
+% 	\begin{figure}[tbh]
+% 		\centering\includegraphics[width=0.7\linewidth]{gpintro_noisefree.pdf}
+% 		\centering\caption{\label{fig:gpintro_noisefree}$\mu_*\pm \sigma_*$ for a noise-free GP at lots of test points}
+% 	\end{figure}
+% \end{frame}
+
 \begin{frame}
-	\frametitle{Making predictions}
+	\frametitle{Adding observation noise}
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{noiseGPcartoon}
+		\newpage
+		\begin{eqnarray}
+			\nonumber \blf &\sim& {\cal N}(\mathbf{0},\mathbf{C})\\
+			\nonumber y_n &\sim& {\cal N}(f_n,\sigma^2)\\
+			\nonumber \by & \sim & {\cal N}(\mathbf{0},\mathbf{C} + \sigma^2\mathbf{I})
+		\end{eqnarray}
+	\end{multicols}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Observation noise}
 	\begin{itemize}
-		\item If we assume no observation noise, we can place \ac{GP} prior directly on $\by$
-		\item If we observe $\by$ and want to predict $y_*$ for a new observation $\bx_*$:
-		\begin{itemize}
-			\item Construct joint Density (it's a Gaussian):
-			\[
-				\left[
-					\begin{array}{c}
-						\by \\ y_*
-					\end{array}
-				\right]
-				\sim 
-				{\cal N} 	\left (
-								\mathbf{0} , 
-								\left [
-									\begin{array}{cc}
-											C(\bX,\bX) & C(\bX,\bx_*) \\ 
-											C(\bx_*,\bX) & C(\bx_*,\bx_*)
-									\end{array}
-								\right ]
-							\right )
-			\]
-			\item And then use standard results for Gaussian conditionals:
-			\[
-				p(y_*|\by,\bX,\bx_*) = {\cal N}(\mu_*,\sigma^2_*)
-			\]
-			where
-			\begin{eqnarray}
-				\nonumber \mu_* &=& C(\bx_*,\bX)C(\bX,\bX)^{-1}\by\\
-				\nonumber \sigma^2_* &=& C(\bx_*,\bx_*) - C(\bx_*,\bX)C(\bX,\bX)^{-1}K(\bX,\bx^*)
-			\end{eqnarray}
-		\end{itemize}
+		\item Posterior of $\bf$ can be derived as:
+		\begin{eqnarray}
+			\nonumber p(\blf|\by) &\propto & {\cal N}(\blf|\mathbf(0),\mathbf{C}){\cal N}(\by|\blf,\sigma^2\mathbf{I})\\
+			\nonumber &=& {\cal N}(\boldsymbol\mu_f,\boldsymbol\Sigma_f)\\
+			\nonumber \boldsymbol\Sigma_f &=& (\mathbf{C}^{-1} + \sigma^{-2}\mathbf{I})^{-1}\\
+			\nonumber \boldsymbol\mu_f &=& \sigma^{-2}\Sigma_f\by
+		\end{eqnarray}
 	\end{itemize}
-	{\small \url{http://orion.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}}
+	\centering\includegraphics<1>[width=0.6\linewidth]{noisepost}
+	\centering\includegraphics<2>[width=0.6\linewidth]{noisepost1}
+	\centering\includegraphics<3>[width=0.6\linewidth]{noisepost2}
+	\centering\includegraphics<4>[width=0.6\linewidth]{noisepost3}
 \end{frame}
-
 \begin{frame}
-	\frametitle{Noise-free example}
-	\begin{figure}[tbh]
-		\centering\includegraphics[width=0.7\linewidth]{gpintro_noisefree.pdf}
-		\centering\caption{\label{fig:gpintro_noisefree}$\mu_*\pm \sigma_*$ for a noise-free GP at lots of test points}
-	\end{figure}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Predictions with noise}
+	\frametitle{Predictions with observation noise}
 	\begin{itemize}
-		\item Assuming Gaussian observation noise, we introduce a set of latent variables, $f_n$ and place the GP prior on these.
+		\item As before, first construct the joint model (note, predicting $\blf_*$)
 		\[
-			y_n \sim {\cal N}(f_n,\sigma^2),~~ \blf \sim {\cal N}(\mathbf{0},\mathbf{C})
+			\left[
+				\begin{array}{c}
+					\by \\ \blf_*
+				\end{array}
+			\right]
+			\sim 
+			{\cal N} 	\left (
+							\mathbf{0} , 
+							\left [
+								\begin{array}{cc}
+										C(\bX,\bX) + \sigma^2\mathbf{I} & C(\bX,\bX_*) \\ 
+										C(\bX_*,\bX) & C(\bX_*,\bX_*)
+								\end{array}
+							\right ]
+						\right )
 		\]
-		\visible<2->{
-			\item Because both terms are Gaussian, the noise can be pushed into the covariance function:
-			\[
-				\left[
-					\begin{array}{c}
-						\by \\ f_*
-					\end{array}
-				\right]
-				\sim 
-				{\cal N} 	\left (
-								\mathbf{0} , 
-								\left [
-									\begin{array}{cc}
-											C(\bX,\bX) + \sigma^2\mathbf{I} & C(\bX,\bx_*) \\ 
-											C(\bx_*,\bX) & C(\bx_*,\bx_*)
-									\end{array}
-								\right ]
-							\right )
-			\]
-		}
-		\visible<3->{
-			\item And, as before (except now predicting $f_*$):
-			\[
-				p(f_*|\by,\bX,\bx_*,\sigma^2) = {\cal N}(\mu_*,\sigma^2_*)
+		\item<2->And then compute the conditionals:
+		\[
+				p(\blf_*|\by,\bX,\bX_*,\sigma^2) = {\cal N}(\boldsymbol\mu_*,\boldsymbol\Sigma_*)
 			\]
 			where
 			\begin{eqnarray}
-				\nonumber \mu_* &=& C(\bx_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}\by\\
-				\nonumber \sigma^2_* &=& C(\bx_*,\bx_*) - C(\bx_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}K(\bX,\bx^*)
+				\nonumber \boldsymbol\mu_* &=& C(\bX_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}\by\\
+				\nonumber \boldsymbol\Sigma_* &=& C(\bX_*,\bX_*) - C(\bX_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}K(\bX,\bX^*)
 			\end{eqnarray}
-		}
 	\end{itemize}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Predictive samples with observation noise}
+	\includegraphics[width=0.7\linewidth]{postsamplenoise}
+	\begin{itemize}
+		\item Posterior functions no longer have to go through training data
+	\end{itemize}
+\end{frame}
 
 \begin{frame}
-	\frametitle{Example with noise}
-	\begin{figure}[tbh]
-		\centering\includegraphics[width=0.7\linewidth]{gpintro_withnoise.pdf}
-		\centering\caption{\label{fig:gpintro_withnoise}$\mu_*\pm\sigma_*$ at lots of test points when observation noise is included.}
-	\end{figure}
+	\includegraphics[width=0.7\linewidth]{predmargnoise}
+	\begin{itemize}
+		\item Marginal predictive mean plus / minus 3 sd.
+	\end{itemize}
 \end{frame}
+
+% \begin{frame}
+% 	\frametitle{Predictions with noise}
+% 	\begin{itemize}
+% 		\item Assuming Gaussian observation noise, we introduce a set of latent variables, $f_n$ and place the GP prior on these.
+% 		\[
+% 			y_n \sim {\cal N}(f_n,\sigma^2),~~ \blf \sim {\cal N}(\mathbf{0},\mathbf{C})
+% 		\]
+% 		\visible<2->{
+% 			\item Because both terms are Gaussian, the noise can be pushed into the covariance function:
+% 			\[
+% 				\left[
+% 					\begin{array}{c}
+% 						\by \\ f_*
+% 					\end{array}
+% 				\right]
+% 				\sim 
+% 				{\cal N} 	\left (
+% 								\mathbf{0} , 
+% 								\left [
+% 									\begin{array}{cc}
+% 											C(\bX,\bX) + \sigma^2\mathbf{I} & C(\bX,\bx_*) \\ 
+% 											C(\bx_*,\bX) & C(\bx_*,\bx_*)
+% 									\end{array}
+% 								\right ]
+% 							\right )
+% 			\]
+% 		}
+% 		\visible<3->{
+% 			\item And, as before (except now predicting $f_*$):
+% 			\[
+% 				p(f_*|\by,\bX,\bx_*,\sigma^2) = {\cal N}(\mu_*,\sigma^2_*)
+% 			\]
+% 			where
+% 			\begin{eqnarray}
+% 				\nonumber \mu_* &=& C(\bx_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}\by\\
+% 				\nonumber \sigma^2_* &=& C(\bx_*,\bx_*) - C(\bx_*,\bX)\left[C(\bX,\bX)+\sigma^2\mathbf{I}\right]^{-1}K(\bX,\bx^*)
+% 			\end{eqnarray}
+% 		}
+% 	\end{itemize}
+% \end{frame}
+
+
+% \begin{frame}
+% 	\frametitle{Example with noise}
+% 	\begin{figure}[tbh]
+% 		\centering\includegraphics[width=0.7\linewidth]{gpintro_withnoise.pdf}
+% 		\centering\caption{\label{fig:gpintro_withnoise}$\mu_*\pm\sigma_*$ at lots of test points when observation noise is included.}
+% 	\end{figure}
+% \end{frame}
 
 \iftasks{
 	\begin{frame}

@@ -10,6 +10,174 @@ plotfunction = @makePDF;
 % plotfunction = @fakePDF; % This one doesn't make output
 
 
+%%
+% Define the points we're interested in
+close all;
+yl = [-3 3];
+x = [0:0.01:1]';
+plot(x,0,'k.');
+setupPlot
+xlabel('x');
+ylabel('y');
+ylim(yl);
+makePDF('interestpoints.eps');
+
+% Generate samples from the prior
+gam = 1;
+N = length(x);
+C = kernel(x,x,'gauss',gam) + 1e-6*eye(N);
+priorSamps = gausssamp(zeros(N,1),C,20);
+hold on
+plot(x,priorSamps,'k','color',[0.6 0.6 0.6]);
+ylim(yl);
+makePDF('priorgam1.eps');
+
+close all;
+plot(x,0,'k.');
+setupPlot
+xlabel('x');
+ylabel('y');
+gam = 10;
+N = length(x);
+C = kernel(x,x,'gauss',gam) + 1e-6*eye(N);
+priorSamps = gausssamp(zeros(N,1),C,20);
+hold on
+plot(x,priorSamps,'k','color',[0.6 0.6 0.6]);
+ylim(yl);
+makePDF('priorgam10.eps');
+
+
+close all;
+plot(x,0,'k.');
+setupPlot
+xlabel('x');
+ylabel('y');
+gam = 100;
+N = length(x);
+C = kernel(x,x,'gauss',gam) + 1e-6*eye(N);
+priorSamps = gausssamp(zeros(N,1),C,20);
+hold on
+plot(x,priorSamps,'k','color',[0.6 0.6 0.6]);
+ylim(yl)
+makePDF('priorgam100.eps');
+
+% add some observed data
+close all
+order = randperm(N);
+Nobs = 10;
+obsx = x(order(1:Nobs));
+y = 3*(obsx.^3 - 4*obsx.^2 + 2*obsx);
+plot(x,0,'k.');
+hold on
+setupPlot
+xlabel('x');
+ylabel('y');
+plot(obsx,y,'ro','markersize',10);
+ylim(yl);
+makePDF('observed.eps');
+
+% Predictive samples
+close all
+gam = 100;
+C = kernel(x,x,'gauss',gam);
+obsC = kernel(obsx,obsx,'gauss',gam) + 1e-6*eye(Nobs);
+crossC = kernel(x,obsx,'gauss',gam);
+predCov = C - crossC*inv(obsC)*crossC';
+predMu = crossC*inv(obsC)*y;
+predSamps = gausssamp(predMu,predCov+1e-6*eye(N),20);
+plot(x,0,'k.');
+hold on
+plot(obsx,y,'ro','markersize',10)
+setupPlot
+xlabel('x');
+ylabel('y');
+hold on
+plot(x,predSamps,'k','color',[0.6 0.6 0.6]);
+ylim(yl);
+makePDF('postsample.eps');
+%%
+close all
+gam = 100;
+C = kernel(x,x,'gauss',gam);
+obsC = kernel(obsx,obsx,'gauss',gam) + 1e-6*eye(Nobs);
+crossC = kernel(x,obsx,'gauss',gam);
+predCov = C - crossC*inv(obsC)*crossC';
+predMu = crossC*inv(obsC)*y;
+predSamps = gausssamp(predMu,predCov+1e-6*eye(N),20);
+plot(x,0,'k.');
+hold on
+plot(obsx,y,'ro','markersize',10)
+setupPlot
+xlabel('x');
+ylabel('y');
+hold on
+plot(x,predMu,'r.');
+for n = 1:N
+    sd = sqrt(predCov(n,n));
+    plot([x(n) x(n)],[predMu(n)-3*sd predMu(n)+3*sd],'k','color',[0.6 0.6 0.6]);
+end
+makePDF('margpred.eps');
+
+%% With noise
+close all
+plot(x,0,'k.');
+hold on
+plot(obsx,y,'ro','markersize',10)
+setupPlot
+xlabel('x');
+ylabel('y');
+ss = 0.1;
+hold on
+postCov = inv(inv(obsC) + (1/ss)*eye(Nobs));
+postMu = (1/ss)*postCov*y;
+postSamps = gausssamp(postMu,postCov,5);
+makePDF('noisepost.eps');
+for i = 1:5
+    plot(obsx,postSamps(i,:),'*','markersize',10);
+    fname = sprintf('noisepost%g.eps',i);
+    makePDF(fname);
+    hold all
+end
+
+%% Predictive samples with noise
+close all
+gam = 100;
+C = kernel(x,x,'gauss',gam);
+obsC = kernel(obsx,obsx,'gauss',gam);
+crossC = kernel(x,obsx,'gauss',gam);
+predCov = C - crossC*inv(obsC + ss*eye(Nobs))*crossC';
+predMu = crossC*inv(obsC+ss*eye(Nobs))*y;
+predSamps = gausssamp(predMu,predCov+1e-6*eye(N),20);
+plot(x,0,'k.');
+hold on
+plot(obsx,y,'ro','markersize',10)
+setupPlot
+xlabel('x');
+ylabel('y');
+hold on
+plot(x,predSamps,'k','color',[0.6 0.6 0.6]);
+ylim(yl);
+makePDF('postsamplenoise.eps');
+
+% Marginal
+close all
+plot(x,0,'k.');
+hold on
+plot(obsx,y,'ro','markersize',10)
+setupPlot
+xlabel('x');
+ylabel('y');
+hold on
+plot(x,predMu,'r.');
+for n = 1:N
+    sd = sqrt(predCov(n,n));
+    plot([x(n) x(n)],[predMu(n)-3*sd predMu(n)+3*sd],'k','color',[0.6 0.6 0.6]);
+end
+makePDF('predmargnoise.eps');
+
+
+%% This next section is the old bit..
+
 
 x = rand(10,1);
 noise_ss = 0.05;
